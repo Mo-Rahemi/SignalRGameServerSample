@@ -16,7 +16,7 @@ builder.Services.AddCors(options => options.AddPolicy("CorsPolicy",
                    .AllowCredentials();
         }));
 //-------------
-//builder.Services.AddSingleton<GameUpdate>();
+builder.Services.AddSingleton<GameUpdate>();
 builder.Services.AddSingleton<Helper>();
 
 var app = builder.Build();

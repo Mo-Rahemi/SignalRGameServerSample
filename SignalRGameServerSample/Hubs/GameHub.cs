@@ -6,13 +6,13 @@ namespace SignalRGameServerSample.Hubs
 {
     public class GameHub : Hub
     {
-        //update delay in milisecond
-        private const int UPDATE_DELAY_MILISECOND = 200;
         private readonly Helper _helper;
+        private readonly GameUpdate _gameUpdate;
         //dependency inject our singletone helper
-        public GameHub(Helper helper)
+        public GameHub(Helper helper,GameUpdate gameUpdate)
         {
             _helper = helper;
+            _gameUpdate = gameUpdate;
         }
         //create player information on connection start
         public override Task OnConnectedAsync()
@@ -32,7 +32,7 @@ namespace SignalRGameServerSample.Hubs
             if (!_helper.Games.Contains(gameId))
                 _helper.AddGame(gameId);
             //add player to game group
-            await Clients.Group(gameId).SendAsync("PlayerJoinGame", player);
+            await Clients.Group(gameId).SendAsync("NewPlayerJoinGame", player);
             //notification to all player in game that a new player connect
             await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
             //set player game id
@@ -51,7 +51,7 @@ namespace SignalRGameServerSample.Hubs
                 _helper.RemoveGame(player.GameId);
             //else if there is player in game say to all this player left game
             else
-                await Clients.Group(player.GameId).SendAsync("PlayerLeftGame", player.Id);
+                await Clients.Group(player.GameId).SendAsync("APlayerLeftGame", player.Id);
             //set player game id to none
             player.GameId = "";
         }
@@ -82,23 +82,6 @@ namespace SignalRGameServerSample.Hubs
             _helper.RemovePlayer(Context.ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
-        public void Start()
-        {
-            //start game update with 200 ms delay between each update
-            Task.Factory.StartNew(async () =>
-            {
-                while (true)
-                {
-                    // send player informations of each game to all game group member
-                    foreach (var gameId in _helper.Games)
-                    {
-                        var world = new Update();
-                        world.PlayerInformations = _helper.Players.Values.Where(x => x.GameId == gameId).ToList();
-                        _ = Clients.Group(gameId).SendAsync("GameUpdate", world);
-                    }
-                    await Task.Delay(UPDATE_DELAY_MILISECOND);
-                }
-            });
-        }
+      
     }
 }
