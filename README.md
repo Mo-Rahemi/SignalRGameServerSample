@@ -1,4 +1,4 @@
-# Simple SignalR Game Server
+# SignalR Game Server
 
 this is a SignalR game server with chat and simple player movment
 
