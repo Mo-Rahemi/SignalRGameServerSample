@@ -5,3 +5,5 @@ if you are planing to build a game or web game with SignalR server this sample c
 **Build Prerequisites :**
 * .net 6
 * visual studio 2022 (you can download free version here https://visualstudio.microsoft.com/downloads/) or any IDE you like.
+
+a sample unity webgl game made with this server can be found in this link : https://github.com/Mo-Rahemi/WebGlGameWithSignalRClient
