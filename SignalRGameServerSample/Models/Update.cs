@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-
+﻿
 namespace SignalRGameServerSample.Models
 {
     public class Update
